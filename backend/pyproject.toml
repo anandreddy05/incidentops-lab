@@ -1,0 +1,32 @@
+[project]
+name = "incidentops-lab-api"
+version = "0.1.0"
+description = "Fault-injectable e-commerce application for AI-powered incident investigation."
+readme = "README.md"
+authors = [
+    { name = "Anand", email = "anandreddy.s3215@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "fastapi>=0.165.0",
+    "psycopg[binary]>=3.3.9",
+    "pydantic-settings>=2.16.3",
+    "python-dotenv>=1.2.4",
+    "sqlalchemy[asyncio]>=2.1.9",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+incidentops-lab-api = "incidentops_lab_api:main"
+
+[build-system]
+requires = ["uv_build>=0.11.1,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+]
