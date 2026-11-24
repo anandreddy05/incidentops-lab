@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from incidentops_lab_api.api.schemas.incident import IncidentCreate
+from incidentops_lab_api.api.schemas.incident import IncidentCreate, IncidentUpdate
 from incidentops_lab_api.models.incident import Incident
 
 
@@ -39,3 +39,19 @@ async def list_incidents(
     )
 
     return list(result.scalars().all())
+
+
+async def update_incident(
+    db: AsyncSession,
+    incident: Incident,
+    incident_data: IncidentUpdate,
+) -> Incident:
+    update_data = incident_data.model_dump(exclude_unset=True)
+
+    for field, value in update_data.items():
+        setattr(incident, field, value)
+
+    await db.commit()
+    await db.refresh(incident)
+
+    return incident

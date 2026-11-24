@@ -17,7 +17,13 @@ class Settings(BaseSettings):
     app_name: str = "IncidentOps Lab API"
     environment: str = "development"
     log_level: str = "INFO"
+
     database_url: str
+    test_database_url: str
+
+    jwt_secret_key: str
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
 
 
 @lru_cache

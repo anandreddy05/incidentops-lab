@@ -6,8 +6,12 @@ from uuid import uuid4
 
 from fastapi import FastAPI, Request
 
+from incidentops_lab_api.api.routes.auth import router as auth_router
 from incidentops_lab_api.api.routes.health import router as health_router
 from incidentops_lab_api.api.routes.incidents import router as incidents_router
+from incidentops_lab_api.api.routes.products import (
+    router as products_router,
+)
 from incidentops_lab_api.core.config import get_settings
 from incidentops_lab_api.core.context import request_id_ctx
 from incidentops_lab_api.core.logging import configure_logging
@@ -33,8 +37,10 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
-app.include_router(incidents_router, prefix="/api/v1")
 
+app.include_router(incidents_router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1")
+app.include_router(products_router, prefix="/api/v1")
 
 @app.middleware("http")
 async def request_context_middleware(

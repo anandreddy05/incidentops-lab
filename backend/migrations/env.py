@@ -1,6 +1,7 @@
 from logging.config import fileConfig
 
 from alembic import context
+from incidentops_lab_api import models
 from incidentops_lab_api.core.base import Base
 from incidentops_lab_api.core.config import get_settings
 from sqlalchemy import engine_from_config, pool
