@@ -3,7 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, String, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from incidentops_lab_api.core.base import Base
 
@@ -59,4 +59,10 @@ class User(Base):
         nullable=False,
         default="customer",
         server_default="customer",
+    )
+
+    cart: Mapped["Cart | None"] = relationship(
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
     )

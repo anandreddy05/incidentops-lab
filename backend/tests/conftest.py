@@ -3,19 +3,18 @@ from collections.abc import AsyncGenerator
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
+from incidentops_lab_api.core.base import Base
+from incidentops_lab_api.core.config import get_settings
+from incidentops_lab_api.core.database import get_db
+from incidentops_lab_api.core.security import create_access_token, hash_password
+from incidentops_lab_api.main import app
+from incidentops_lab_api.models import Cart, CartItem, Incident, Product, User
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
-
-from incidentops_lab_api.core.base import Base
-from incidentops_lab_api.core.config import get_settings
-from incidentops_lab_api.core.database import get_db
-from incidentops_lab_api.core.security import create_access_token, hash_password
-from incidentops_lab_api.main import app
-from incidentops_lab_api.models import Incident, Product, User
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -55,6 +54,8 @@ async def prepare_test_database(test_engine):
 @pytest_asyncio.fixture(autouse=True)
 async def clean_database(test_session_factory):
     async with test_session_factory() as session:
+        await session.execute(delete(CartItem))
+        await session.execute(delete(Cart))
         await session.execute(delete(Product))
         await session.execute(delete(Incident))
         await session.execute(delete(User))
@@ -83,6 +84,7 @@ def client(test_session_factory):
             delattr(app.state, "test_session_factory")
         else:
             app.state.test_session_factory = original_factory
+
 
 @pytest.fixture
 def admin_token(client):
